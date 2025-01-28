@@ -72,7 +72,7 @@ abstract class Agent {
         console.error('Error during execution:', error);
       }
 
-      count++;
+      // count++;
     }
 
     console.log(`${this.name} completed with final result: ${result}`);
