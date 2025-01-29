@@ -41,7 +41,7 @@ abstract class Agent {
   }
 
 
-  abstract react(steps: Step[]): Promise<string>;
+  abstract react(action_step: ActionStep): Promise<string>;
 
   initialize_system_prompt(): void {
     const [tools_names, tools_descriptions] = get_tools_names_and_descriptions(this.tools);
@@ -63,7 +63,7 @@ abstract class Agent {
       const step: ActionStep = { step: count + 1, name: this.name, llm_output: '', observations: '' };
       try {
         // Call the step method, which is defined in the subclass (like ToolUseAgent)
-        result = await this.react(this.memory);   
+        result = await this.react(step);   
         console.log(`Result: ${result}`);
 
         // Here you can add logic to decide if you should stop or continue to the next iteration
@@ -72,7 +72,7 @@ abstract class Agent {
         console.error('Error during execution:', error);
       }
 
-      // count++;
+      count++; 
     }
 
     console.log(`${this.name} completed with final result: ${result}`);

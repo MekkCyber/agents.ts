@@ -1,7 +1,7 @@
 import Tool from "../types/tool";
 import Agent from "./base";
 import { SYSTEM_PROMPT_REACT, SYSTEM_PROMPT_TOOL_USE } from "../utils/prompts";
-import { Step, SystemPromptStep } from "../types/step"; // Adjust the import path as necessary
+import { ActionStep, Step, SystemPromptStep } from "../types/step"; // Adjust the import path as necessary
 
 class ToolUseAgent extends Agent {
 
@@ -16,22 +16,11 @@ class ToolUseAgent extends Agent {
     this.tools.set(tool.name, tool);
   }
 
-  async react(steps : Step[]): Promise<string> {
-    const memory = this.get_memory_from_steps(steps)
-    const match = memory.match(/use (.+?) with args (.+)/);
-    if (match) {
-      const toolName = match[1].trim();
-      const args = match[2].trim();
+  async react(action_step: ActionStep): Promise<string> {
 
-      const tool = this.tools.get(toolName);
-      if (tool) {
-        const result = await tool.execute(args);
-        this.addToMemory(`Used ${toolName} with args: ${args}`);
-        return result;
-      } else {
-        return `Tool "${toolName}" not found.`;
-      }
-    }
+    const memory = this.get_memory_from_steps(this.memory)
+    const match = memory.match(/use (.+?) with args (.+)/);
+    
 
     return "I don't know how to handle that input.";
   }
